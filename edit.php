@@ -31,9 +31,30 @@ $PAGE->set_context(context_system::instance());
 $pagetitle = get_string('editmessages', 'local_message');
 $PAGE->set_title($pagetitle);
 
-echo $OUTPUT->header();
-
 $mform = new message_form();
+
+
+// Form processing and displaying is done here
+if ($mform->is_cancelled()) {
+  // Handle form cancel operation, if cancel button is present on form
+
+  // Redirect to manage page.
+  redirect('/local/message/manage.php', 'You cancelled sending a message', 10);
+} else if ($fromform = $mform->get_data()) {
+  //In this case you process validated data. $mform->get_data() returns data posted in form.
+
+  // Add new record into our database.
+  $dataobject = new stdClass();
+
+  $dataobject->messagetext = $fromform->messagetext;
+  $dataobject->messagetype = $fromform->messagetype;
+
+  if($DB->insert_record('local_message', $dataobject)) {
+    redirect('/local/message/manage.php', 'Message saved successfully!', 10);
+  }
+} 
+
+echo $OUTPUT->header();
 
 // Displays the form
 $mform->display();

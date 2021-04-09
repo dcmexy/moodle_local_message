@@ -23,16 +23,21 @@
  */
 require_once('../../config.php');
 
+global $DB;
+
 $PAGE->set_url('/local/message/manage.php');
 $PAGE->set_context(context_system::instance());
 
 $pagetitle = get_string('managemessages', 'local_message');
 $PAGE->set_title($pagetitle);
 
+$messages = $DB->get_records('local_message');
+
 echo $OUTPUT->header();
 
 $data = (object)[
-  'text' => 'Some text to display',
+  'messages' => array_values($messages),
+  'editurl' => new moodle_url('/local/message/edit.php'),
 ];
 
 echo $OUTPUT->render_from_template('local_message/manage', $data);

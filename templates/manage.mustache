@@ -27,7 +27,12 @@
       
   }
 }}
-<h1>Hello</h1>
-{{text}}
+<h1>List of messages</h1>
+{{#messages}}
+<p>{{messagetext}}</p>
+{{/messages}}
+
+<hr>
+<a href={{editurl}} class="btn btn-primary">Create message</a>
 
 
