@@ -25,9 +25,18 @@
 defined('MOODLE_INTERNAL') || die;
 
 function local_message_before_footer() {
-  global $DB;
+  global $DB, $USER;
 
-  $messages = $DB->get_records('local_message');
+  $sql = "SELECT lm.id, lm.messagetext, lm.messagetype FROM {local_message} lm
+          LEFT JOIN (SELECT * FROM {local_message_read} lmx WHERE lmx.userid = :userid) lmr 
+          ON lm.id = lmr.messageid
+          WHERE lmr.messageid <> lm.id OR lmr.userid IS NULL";
+  
+  $params_array = array(
+    'userid' => $USER->id,
+  );
+
+  $messages = $DB->get_records_sql($sql, $params_array);
 
   foreach ($messages as $message) {
     switch($message->messagetype) {
@@ -43,7 +52,14 @@ function local_message_before_footer() {
       default:
         \core\notification::info($message->messagetext);
     }
+
+    // Mark as read
+    $dataobject = new stdClass();
+    $dataobject->messageid = $message->id;
+    $dataobject->userid = $USER->id;
+    $dataobject->timeread = time();
     
+    $DB->insert_record('local_message_read', $dataobject);
   }
   
 }
