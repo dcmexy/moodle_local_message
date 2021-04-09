@@ -15,15 +15,27 @@
 // along with Moodle.  If not, see https://www.gnu.org/licenses/.
 
 /**
- * Language EN.
+ * Version details.
  *
  * @package    local_message
  * @author     Dean C.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-$string['pluginname'] = 'Message';
-$string['managemessages'] = 'Manage messages';
-$string['editmessages'] = 'Edit';
-$string['messagetextplaceholder'] = 'Please enter message';
-$string['messagetext'] = 'Message text';
-$string['messagetype'] = 'Message type';
+
+require_once('../../config.php');
+require_once('forms/message.php');
+
+$PAGE->set_url('/local/message/manage.php');
+$PAGE->set_context(context_system::instance());
+
+$pagetitle = get_string('editmessages', 'local_message');
+$PAGE->set_title($pagetitle);
+
+echo $OUTPUT->header();
+
+$mform = new message_form();
+
+// Displays the form
+$mform->display();
+
+echo $OUTPUT->footer();

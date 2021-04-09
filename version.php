@@ -18,7 +18,7 @@
  * Version details.
  *
  * @package    local_message
- * @copyright  2021 Dean Chimezie
+ * @copyright  2021 Dean C.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
